@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เกมฝึกทักษะการใช้เมาส์ - โรงเรียนพิษณุโลกปัญญานุกูล</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -71,6 +72,7 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Kanit', sans-serif;
         }
 
         .menu-btn:hover {
@@ -123,6 +125,17 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
+        .balloon::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 40px;
+            background: #333;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         .balloon:hover {
             transform: scale(1.1);
         }
@@ -132,8 +145,8 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
         }
 
         @keyframes pop {
@@ -163,12 +176,12 @@
         }
 
         .drag-item:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
         }
 
         .drag-item.dragging {
             opacity: 0.5;
-            transform: rotate(5deg);
+            transform: rotate(10deg);
         }
 
         .drop-zone {
@@ -188,6 +201,7 @@
         .drop-zone.drag-over {
             background: rgba(118, 75, 162, 0.3);
             transform: scale(1.1);
+            border-width: 6px;
         }
 
         .drop-zone.correct {
@@ -198,9 +212,9 @@
         }
 
         @keyframes success {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
 
         /* เกมเขาวงกต - ปรับปรุงใหม่ */
@@ -209,22 +223,24 @@
             width: 800px;
             height: 500px;
             margin: 0 auto;
-            background: #e8f5e9;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1), 0 10px 30px rgba(0,0,0,0.2);
             border: 3px solid #4CAF50;
         }
 
         .maze-path {
             fill: #81c784;
             stroke: none;
+            opacity: 0.8;
         }
 
         .maze-wall {
             fill: #5e35b1;
             stroke: #4527a0;
             stroke-width: 2;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
         }
 
         .maze-start, .maze-end {
@@ -240,6 +256,12 @@
             color: white;
             z-index: 5;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .maze-start {
@@ -264,6 +286,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
             transition: none;
             pointer-events: none;
+            border: 2px solid #FF8C00;
         }
 
         .maze-trail {
@@ -277,59 +300,23 @@
         }
 
         @keyframes fadeOut {
-            to { opacity: 0; transform: scale(0.5); }
+            to { 
+                opacity: 0; 
+                transform: scale(0.5);
+            }
         }
 
         .maze-status {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             padding: 10px 20px;
             border-radius: 20px;
             font-size: 18px;
+            font-weight: 500;
             z-index: 20;
-        }
-
-        /* ผลลัพธ์ */
-        .result {
-            text-align: center;
-            font-size: 36px;
-            color: #4CAF50;
-            margin-top: 20px;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .celebration {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 100px;
-            animation: celebrate 1s;
-            z-index: 1000;
-        }
-
-        @keyframes celebrate {
-            0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); }
-            50% { transform: translate(-50%, -50%) scale(1.5) rotate(180deg); }
-            100% { transform: translate(-50%, -50%) scale(0) rotate(360deg); }
-        }
-
-        .instructions {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            font-size: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         /* เกมจับคู่ */
@@ -359,6 +346,7 @@
 
         .memory-card:hover {
             transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .memory-card.flipped {
@@ -371,8 +359,11 @@
         }
 
         @keyframes matchFound {
-            0%, 100% { transform: scale(1) rotateY(180deg); }
-            50% { transform: scale(1.2) rotateY(180deg); }
+            0% { transform: scale(1) rotateY(180deg); }
+            25% { transform: scale(1.2) rotateY(180deg) rotate(5deg); }
+            50% { transform: scale(1.2) rotateY(180deg) rotate(-5deg); }
+            75% { transform: scale(1.2) rotateY(180deg) rotate(5deg); }
+            100% { transform: scale(1) rotateY(180deg); }
         }
 
         .card-front, .card-back {
@@ -390,13 +381,16 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-size: 40px;
+            font-weight: bold;
         }
 
         .card-back {
             background: white;
             transform: rotateY(180deg);
+            border: 3px solid #f0f0f0;
         }
 
+        /* ปุ่มและผลลัพธ์ */
         .reset-btn {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
@@ -409,17 +403,125 @@
             display: block;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Kanit', sans-serif;
         }
 
         .reset-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .reset-btn:active {
+            transform: translateY(0);
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result {
+            text-align: center;
+            font-size: 36px;
+            color: #4CAF50;
+            margin-top: 20px;
+            animation: fadeIn 0.5s;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            animation: celebrate 1s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        @keyframes celebrate {
+            0% { 
+                transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+                opacity: 0;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(0) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
             75% { transform: translateX(10px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .maze-container {
+                transform: scale(0.8);
+                margin: -50px auto;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            .subtitle {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .maze-container {
+                transform: scale(0.6);
+                margin: -100px auto;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 100px);
+                gap: 10px;
+            }
+            
+            .memory-card {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
@@ -431,15 +533,15 @@
         </div>
 
         <div class="menu">
-            <button class="menu-btn" onclick="startGame('click')">🎈 คลิกบอลลูน</button>
-            <button class="menu-btn" onclick="startGame('drag')">🧩 ลากวางรูปภาพ</button>
-            <button class="menu-btn" onclick="startGame('maze')">🏃 เขาวงกต</button>
-            <button class="menu-btn" onclick="startGame('memory')">🎴 จับคู่ภาพ</button>
+            <button class="menu-btn" onclick="startGame('click', event)">🎈 คลิกบอลลูน</button>
+            <button class="menu-btn" onclick="startGame('drag', event)">🧩 ลากวางรูปภาพ</button>
+            <button class="menu-btn" onclick="startGame('maze', event)">🏃 เขาวงกต</button>
+            <button class="menu-btn" onclick="startGame('memory', event)">🎴 จับคู่ภาพ</button>
         </div>
 
         <!-- เกมคลิกบอลลูน -->
         <div id="clickGame" class="game-area">
-            <div class="instructions">🎯 คลิกที่ลูกบอลลูนให้ได้มากที่สุด!</div>
+            <div class="instructions">🎯 คลิกที่ลูกบอลลูนให้ได้มากที่สุดภายในเวลาที่กำหนด!</div>
             <div class="score-board">คะแนน: <span id="clickScore">0</span> / 10</div>
             <div id="balloonArea" style="position: relative; height: 400px;">
                 <!-- บอลลูนจะถูกสร้างด้วย JavaScript -->
@@ -448,10 +550,10 @@
 
         <!-- เกมลากวาง -->
         <div id="dragGame" class="game-area">
-            <div class="instructions">📦 ลากรูปภาพไปวางในกล่องที่ถูกต้อง</div>
+            <div class="instructions">📦 ลากรูปภาพสัตว์ไปวางในกล่องที่มีชื่อตรงกัน</div>
             <div class="score-board">คะแนน: <span id="dragScore">0</span> / 4</div>
             
-            <div style="display: flex; justify-content: space-around; margin: 30px 0;">
+            <div id="dragItemsContainer" style="display: flex; justify-content: space-around; margin: 30px 0;">
                 <div class="drag-item" draggable="true" data-animal="cat">🐱</div>
                 <div class="drag-item" draggable="true" data-animal="dog">🐶</div>
                 <div class="drag-item" draggable="true" data-animal="bird">🐦</div>
@@ -468,9 +570,9 @@
             <button class="reset-btn" onclick="resetDragGame()">เริ่มใหม่</button>
         </div>
 
-        <!-- เกมเขาวงกต - ปรับปรุงใหม่ -->
+        <!-- เกมเขาวงกต -->
         <div id="mazeGame" class="game-area">
-            <div class="instructions">🗺️ เลื่อนเมาส์พาลูกบอลจากจุดเริ่มต้นไปยังเป้าหมาย อย่าให้ชนกำแพงสีม่วง!</div>
+            <div class="instructions">🗺️ เลื่อนเมาส์พาลูกบอลจากจุดเริ่มต้นไปยังเป้าหมาย อย่าให้ออกนอกเส้นทางสีเขียว!</div>
             <div class="score-board">
                 เวลา: <span id="mazeTime">0</span> วินาที | 
                 ชนกำแพง: <span id="mazeHits">0</span> ครั้ง
@@ -503,8 +605,11 @@
 
         <!-- เกมจับคู่ -->
         <div id="memoryGame" class="game-area">
-            <div class="instructions">🎴 คลิกการ์ดเพื่อเปิดและจับคู่ภาพที่เหมือนกัน</div>
-            <div class="score-board">จับคู่แล้ว: <span id="memoryScore">0</span> / 4 คู่</div>
+            <div class="instructions">🎴 คลิกการ์ดเพื่อเปิดและจับคู่ภาพที่เหมือนกัน จำตำแหน่งให้ดี!</div>
+            <div class="score-board">
+                จับคู่แล้ว: <span id="memoryScore">0</span> / 4 คู่ | 
+                คลิกไป: <span id="memoryClicks">0</span> ครั้ง
+            </div>
             
             <div class="memory-grid" id="memoryGrid">
                 <!-- การ์ดจะถูกสร้างด้วย JavaScript -->
@@ -515,6 +620,7 @@
     </div>
 
     <script>
+        // ตัวแปรสำหรับเกมทั้งหมด
         let currentGame = null;
         let clickScore = 0;
         let dragScore = 0;
@@ -522,10 +628,13 @@
         let mazeTimer = null;
         let mazeHits = 0;
         let memoryScore = 0;
+        let memoryClicks = 0;
         let memoryFlipped = [];
         let memoryMatched = [];
+        let draggedItem = null;
 
-        function startGame(gameType) {
+        // ฟังก์ชันหลักสำหรับเริ่มเกม
+        function startGame(gameType, event) {
             // ซ่อนเกมทั้งหมด
             document.querySelectorAll('.game-area').forEach(area => {
                 area.classList.remove('active');
@@ -543,48 +652,71 @@
                 gameArea.classList.add('active');
                 
                 // เพิ่ม active class ให้ปุ่มที่เลือก
-                event.target.classList.add('active');
+                if (event && event.target) {
+                    event.target.classList.add('active');
+                }
                 
                 // เริ่มเกมตามประเภท
-                if (gameType === 'click') {
-                    startClickGame();
-                } else if (gameType === 'drag') {
-                    setupDragGame();
-                } else if (gameType === 'maze') {
-                    setupMazeGame();
-                } else if (gameType === 'memory') {
-                    setupMemoryGame();
+                switch(gameType) {
+                    case 'click':
+                        startClickGame();
+                        break;
+                    case 'drag':
+                        setupDragGame();
+                        break;
+                    case 'maze':
+                        setupMazeGame();
+                        break;
+                    case 'memory':
+                        setupMemoryGame();
+                        break;
                 }
             }
         }
 
+        // =================
         // เกมคลิกบอลลูน
+        // =================
         function startClickGame() {
             clickScore = 0;
             document.getElementById('clickScore').textContent = '0';
             const balloonArea = document.getElementById('balloonArea');
             balloonArea.innerHTML = '';
             
-            // สร้างบอลลูน 10 ลูก
+            // สร้างบอลลูน 10 ลูกในเวลาต่างกัน
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                     createBalloon();
-                }, i * 1000);
+                }, i * 800 + Math.random() * 500);
             }
         }
 
         function createBalloon() {
             const balloonArea = document.getElementById('balloonArea');
+            if (!balloonArea) return;
+            
             const balloon = document.createElement('div');
             balloon.className = 'balloon';
             
-            // สุ่มสี
-            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#FFD700'];
+            // สุ่มสีสวยๆ
+            const colors = [
+                'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+                'linear-gradient(135deg, #4ECDC4, #44A08D)',
+                'linear-gradient(135deg, #45B7D1, #2196F3)',
+                'linear-gradient(135deg, #FFA07A, #FF6B9D)',
+                'linear-gradient(135deg, #98D8C8, #6DD5ED)',
+                'linear-gradient(135deg, #FFD700, #FFA500)'
+            ];
             balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
             
             // สุ่มตำแหน่ง
-            balloon.style.left = Math.random() * (balloonArea.offsetWidth - 80) + 'px';
-            balloon.style.top = Math.random() * (balloonArea.offsetHeight - 100) + 'px';
+            const maxX = balloonArea.offsetWidth - 80;
+            const maxY = balloonArea.offsetHeight - 100;
+            balloon.style.left = Math.random() * maxX + 'px';
+            balloon.style.top = Math.random() * maxY + 'px';
+            
+            // สุ่มความเร็วแอนิเมชัน
+            balloon.style.animationDuration = (2 + Math.random() * 2) + 's';
             
             balloon.onclick = function() {
                 if (!balloon.classList.contains('popped')) {
@@ -592,15 +724,13 @@
                     clickScore++;
                     document.getElementById('clickScore').textContent = clickScore;
                     
-                    // เสียงป๊อป (จำลอง)
                     showFeedback('💥');
                     
                     setTimeout(() => {
                         balloon.remove();
                         
-                        // ตรวจสอบว่าครบ 10 ลูกหรือยัง
                         if (clickScore === 10) {
-                            showResult('ยอดเยี่ยม! คุณคลิกบอลลูนครบทั้งหมด! 🎉');
+                            showResult('🎉 ยอดเยี่ยม! คุณคลิกบอลลูนครบทั้งหมด!');
                             celebrate();
                         }
                     }, 300);
@@ -609,48 +739,62 @@
             
             balloonArea.appendChild(balloon);
             
-            // ลบบอลลูนหลังจาก 5 วินาที ถ้ายังไม่ถูกคลิก
+            // ลบบอลลูนหลังจาก 4-6 วินาที
             setTimeout(() => {
                 if (!balloon.classList.contains('popped')) {
-                    balloon.remove();
+                    balloon.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => balloon.remove(), 500);
                 }
-            }, 5000);
+            }, 4000 + Math.random() * 2000);
         }
 
+        // =================
         // เกมลากวาง
+        // =================
         function setupDragGame() {
             dragScore = 0;
             document.getElementById('dragScore').textContent = '0';
             
+            // รีเซ็ตรายการที่ลาก
             const dragItems = document.querySelectorAll('.drag-item');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            
-            // Reset drop zones
-            dropZones.forEach(zone => {
-                zone.classList.remove('correct');
-                zone.innerHTML = zone.getAttribute('data-animal') === 'cat' ? 'แมว' :
-                                zone.getAttribute('data-animal') === 'dog' ? 'หมา' :
-                                zone.getAttribute('data-animal') === 'bird' ? 'นก' : 'ปลา';
-            });
-            
             dragItems.forEach(item => {
                 item.style.display = 'flex';
+                item.style.opacity = '1';
+                
+                // ลบ event listeners เก่า
+                item.removeEventListener('dragstart', dragStart);
+                item.removeEventListener('dragend', dragEnd);
+                
+                // เพิ่ม event listeners ใหม่
                 item.addEventListener('dragstart', dragStart);
                 item.addEventListener('dragend', dragEnd);
             });
             
+            // รีเซ็ต drop zones
+            const dropZones = document.querySelectorAll('.drop-zone');
             dropZones.forEach(zone => {
+                zone.classList.remove('correct');
+                const animal = zone.getAttribute('data-animal');
+                zone.innerHTML = animal === 'cat' ? 'แมว' :
+                                animal === 'dog' ? 'หมา' :
+                                animal === 'bird' ? 'นก' : 'ปลา';
+                
+                // ลบ event listeners เก่า
+                zone.removeEventListener('dragover', dragOver);
+                zone.removeEventListener('dragleave', dragLeave);
+                zone.removeEventListener('drop', dragDrop);
+                
+                // เพิ่ม event listeners ใหม่
                 zone.addEventListener('dragover', dragOver);
                 zone.addEventListener('dragleave', dragLeave);
                 zone.addEventListener('drop', dragDrop);
             });
         }
 
-        let draggedItem = null;
-
         function dragStart(e) {
             draggedItem = this;
             this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
         }
 
         function dragEnd(e) {
@@ -659,6 +803,7 @@
 
         function dragOver(e) {
             e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
             this.classList.add('drag-over');
         }
 
@@ -670,41 +815,58 @@
             e.preventDefault();
             this.classList.remove('drag-over');
             
-            if (draggedItem && this.getAttribute('data-animal') === draggedItem.getAttribute('data-animal')) {
-                this.classList.add('correct');
-                this.innerHTML = draggedItem.innerHTML;
-                draggedItem.style.display = 'none';
-                dragScore++;
-                document.getElementById('dragScore').textContent = dragScore;
-                
-                showFeedback('✅');
-                
-                if (dragScore === 4) {
-                    showResult('ยอดเยี่ยม! คุณจับคู่ถูกต้องทั้งหมด! 🎊');
-                    celebrate();
+            if (draggedItem && !this.classList.contains('correct')) {
+                if (this.getAttribute('data-animal') === draggedItem.getAttribute('data-animal')) {
+                    // ถูกต้อง
+                    this.classList.add('correct');
+                    this.innerHTML = draggedItem.innerHTML;
+                    draggedItem.style.opacity = '0';
+                    setTimeout(() => {
+                        draggedItem.style.display = 'none';
+                    }, 300);
+                    
+                    dragScore++;
+                    document.getElementById('dragScore').textContent = dragScore;
+                    
+                    showFeedback('✅');
+                    
+                    if (dragScore === 4) {
+                        setTimeout(() => {
+                            showResult('🎊 ยอดเยี่ยม! คุณจับคู่ถูกต้องทั้งหมด!');
+                            celebrate();
+                        }, 500);
+                    }
+                } else {
+                    // ผิด
+                    showFeedback('❌');
+                    this.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        this.style.animation = '';
+                    }, 500);
                 }
-            } else {
-                showFeedback('❌');
-                this.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    this.style.animation = '';
-                }, 500);
             }
+            
+            draggedItem = null;
         }
 
         function resetDragGame() {
             setupDragGame();
         }
 
-        // เกมเขาวงกต - ปรับปรุงใหม่
+        // =================
+        // เกมเขาวงกต
+        // =================
         function setupMazeGame() {
             mazeTime = 0;
             mazeHits = 0;
             document.getElementById('mazeTime').textContent = '0';
             document.getElementById('mazeHits').textContent = '0';
-            document.getElementById('mazeStatus').textContent = 'พร้อมเริ่ม!';
+            document.getElementById('mazeStatus').textContent = 'เลื่อนเมาส์เข้ามาเพื่อเริ่ม';
             
-            if (mazeTimer) clearInterval(mazeTimer);
+            if (mazeTimer) {
+                clearInterval(mazeTimer);
+                mazeTimer = null;
+            }
             
             const ball = document.getElementById('mazeBall');
             const container = document.getElementById('mazeContainer');
@@ -717,83 +879,118 @@
             ball.style.left = ballX + 'px';
             ball.style.top = ballY + 'px';
             
-            // เริ่มจับเวลา
-            mazeTimer = setInterval(() => {
-                if (isPlaying && !hasWon) {
-                    mazeTime++;
-                    document.getElementById('mazeTime').textContent = mazeTime;
-                }
-            }, 1000);
-            
-            // ฟังก์ชันตรวจสอบการชนกำแพง
-            function checkWallCollision(x, y) {
-                // กำแพง 1: x=200-600, y=120-200
-                if (x > 175 && x < 625 && y > 95 && y < 225) return true;
-                // กำแพง 2: x=200-600, y=300-380
-                if (x > 175 && x < 625 && y > 275 && y < 405) return true;
-                // กำแพง 3: x=350-450, y=0-120
-                if (x > 325 && x < 475 && y < 145) return true;
-                // กำแพง 4: x=350-450, y=380-500
-                if (x > 325 && x < 475 && y > 355) return true;
+            // ฟังก์ชันตรวจสอบว่าอยู่ในเส้นทางสีเขียว
+            function isInGreenPath(x, y) {
+                const cx = x + 25; // จุดกึ่งกลางของลูกบอล
+                const cy = y + 25;
+                const margin = 5; // ให้พื้นที่ผิดพลาดนิดหน่อย
                 
-                // ขอบนอก
-                if (x < 0 || x > 750 || y < 0 || y > 450) return true;
+                // เส้นทางบน
+                if (cx >= 20-margin && cx <= 780+margin && cy >= 20-margin && cy <= 120+margin) {
+                    // ตรวจสอบว่าไม่ชนกำแพงที่ทะลุลงมา
+                    if (cx >= 350 && cx <= 450 && cy <= 120) {
+                        return false; // ชนกำแพงบน
+                    }
+                    return true;
+                }
+                
+                // เส้นทางขวา
+                if (cx >= 680-margin && cx <= 780+margin && cy >= 120-margin && cy <= 380+margin) {
+                    return true;
+                }
+                
+                // เส้นทางล่าง
+                if (cx >= 20-margin && cx <= 780+margin && cy >= 380-margin && cy <= 480+margin) {
+                    // ตรวจสอบว่าไม่ชนกำแพงที่ทะลุขึ้นมา
+                    if (cx >= 350 && cx <= 450 && cy >= 380) {
+                        return false; // ชนกำแพงล่าง
+                    }
+                    return true;
+                }
+                
+                // เส้นทางซ้าย
+                if (cx >= 20-margin && cx <= 120+margin && cy >= 120-margin && cy <= 380+margin) {
+                    return true;
+                }
+                
+                // เส้นทางกลาง
+                if (cx >= 120-margin && cx <= 680+margin && cy >= 200-margin && cy <= 300+margin) {
+                    // ตรวจสอบว่าไม่ชนกำแพงกลาง
+                    if (cx >= 200 && cx <= 600) {
+                        if (cy >= 120 && cy <= 200) return false; // กำแพงบน
+                        if (cy >= 300 && cy <= 380) return false; // กำแพงล่าง
+                    }
+                    return true;
+                }
                 
                 return false;
             }
             
             // ฟังก์ชันตรวจสอบถึงเป้าหมาย
             function checkGoal(x, y) {
-                // เป้าหมายอยู่ที่ประมาณ x=700, y=420
-                if (x > 650 && y > 370) return true;
-                return false;
+                const cx = x + 25;
+                const cy = y + 25;
+                return (cx > 680 && cy > 400);
             }
             
-            // เมื่อเมาส์เข้ามาในพื้นที่เกม
+            // Event handlers
             container.onmouseenter = function(e) {
-                if (!hasWon) {
+                if (!hasWon && !isPlaying) {
                     isPlaying = true;
                     document.getElementById('mazeStatus').textContent = 'กำลังเล่น...';
+                    
+                    // เริ่มจับเวลา
+                    if (!mazeTimer) {
+                        mazeTimer = setInterval(() => {
+                            if (isPlaying && !hasWon) {
+                                mazeTime++;
+                                document.getElementById('mazeTime').textContent = mazeTime;
+                            }
+                        }, 1000);
+                    }
                 }
             };
             
-            // เมื่อเมาส์ออกจากพื้นที่เกม
             container.onmouseleave = function(e) {
-                if (!hasWon) {
+                if (!hasWon && isPlaying) {
                     isPlaying = false;
                     document.getElementById('mazeStatus').textContent = 'หยุดชั่วคราว';
                 }
             };
             
-            // ติดตามการเคลื่อนที่ของเมาส์
             container.onmousemove = function(e) {
                 if (!isPlaying || hasWon) return;
                 
                 const rect = container.getBoundingClientRect();
-                const targetX = e.clientX - rect.left - 25;
-                const targetY = e.clientY - rect.top - 25;
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                // คำนวณตำแหน่งเป้าหมาย
+                const targetX = mouseX - 25;
+                const targetY = mouseY - 25;
                 
                 // ทำให้ลูกบอลตามเมาส์แบบนุ่มนวล
                 const dx = targetX - ballX;
                 const dy = targetY - ballY;
-                const speed = 0.15; // ความเร็วในการตาม (0-1)
+                const speed = 0.25;
                 
                 const newX = ballX + dx * speed;
                 const newY = ballY + dy * speed;
                 
-                // ตรวจสอบการชนกำแพง
-                if (checkWallCollision(newX, newY)) {
+                // ตรวจสอบว่ายังอยู่ในเส้นทาง
+                if (!isInGreenPath(newX, newY)) {
+                    // ออกนอกเส้นทาง!
                     mazeHits++;
                     document.getElementById('mazeHits').textContent = mazeHits;
                     showFeedback('💥');
                     
-                    // รีเซ็ตตำแหน่ง
+                    // รีเซ็ต
                     ballX = 45;
                     ballY = 45;
                     ball.style.left = ballX + 'px';
                     ball.style.top = ballY + 'px';
                     
-                    document.getElementById('mazeStatus').textContent = 'ชนกำแพง! เริ่มใหม่';
+                    document.getElementById('mazeStatus').textContent = 'ชนกำแพง! รอสักครู่...';
                     isPlaying = false;
                     
                     setTimeout(() => {
@@ -801,16 +998,16 @@
                             isPlaying = true;
                             document.getElementById('mazeStatus').textContent = 'กำลังเล่น...';
                         }
-                    }, 1000);
+                    }, 1500);
                 } else {
-                    // อัปเดตตำแหน่งลูกบอล
+                    // ยังอยู่ในเส้นทาง
                     ballX = newX;
                     ballY = newY;
                     ball.style.left = ballX + 'px';
                     ball.style.top = ballY + 'px';
                     
                     // สร้างรอยทาง
-                    if (Math.random() < 0.3) {
+                    if (Math.random() < 0.15) {
                         const trail = document.createElement('div');
                         trail.className = 'maze-trail';
                         trail.style.left = (ballX + 10) + 'px';
@@ -824,13 +1021,17 @@
                         hasWon = true;
                         isPlaying = false;
                         clearInterval(mazeTimer);
+                        mazeTimer = null;
+                        
                         document.getElementById('mazeStatus').textContent = 'สำเร็จ! 🎉';
                         
-                        let message = `ยอดเยี่ยม! คุณผ่านเขาวงกตใน ${mazeTime} วินาที`;
+                        let message = `🏆 ยอดเยี่ยม! ใช้เวลา ${mazeTime} วินาที`;
                         if (mazeHits === 0) {
-                            message += ' โดยไม่ชนกำแพงเลย! สุดยอด! 🏆';
+                            message += ' และไม่ชนกำแพงเลย! Perfect!';
+                        } else if (mazeHits <= 2) {
+                            message += ` ชนกำแพง ${mazeHits} ครั้ง ดีมาก!`;
                         } else {
-                            message += ` และชนกำแพง ${mazeHits} ครั้ง`;
+                            message += ` ชนกำแพง ${mazeHits} ครั้ง`;
                         }
                         
                         showResult(message);
@@ -841,19 +1042,28 @@
         }
 
         function resetMazeGame() {
+            if (mazeTimer) {
+                clearInterval(mazeTimer);
+                mazeTimer = null;
+            }
             setupMazeGame();
         }
 
+        // =================
         // เกมจับคู่
+        // =================
         function setupMemoryGame() {
             memoryScore = 0;
+            memoryClicks = 0;
             memoryFlipped = [];
             memoryMatched = [];
             document.getElementById('memoryScore').textContent = '0';
+            document.getElementById('memoryClicks').textContent = '0';
             
             const grid = document.getElementById('memoryGrid');
             grid.innerHTML = '';
             
+            // สร้างคู่อีโมจิ
             const emojis = ['🐵', '🐵', '🦁', '🦁', '🐸', '🐸', '🦋', '🦋'];
             const shuffled = emojis.sort(() => Math.random() - 0.5);
             
@@ -883,15 +1093,20 @@
         }
 
         function flipCard(card) {
+            // ตรวจสอบเงื่อนไข
             if (memoryFlipped.length === 2) return;
             if (card.classList.contains('flipped')) return;
             if (card.classList.contains('matched')) return;
             
+            // พลิกการ์ด
             card.classList.add('flipped');
             memoryFlipped.push(card);
+            memoryClicks++;
+            document.getElementById('memoryClicks').textContent = memoryClicks;
             
+            // ตรวจสอบคู่
             if (memoryFlipped.length === 2) {
-                checkMatch();
+                setTimeout(() => checkMatch(), 600);
             }
         }
 
@@ -899,6 +1114,7 @@
             const [card1, card2] = memoryFlipped;
             
             if (card1.dataset.emoji === card2.dataset.emoji) {
+                // จับคู่ถูกต้อง
                 card1.classList.add('matched');
                 card2.classList.add('matched');
                 memoryScore++;
@@ -908,15 +1124,21 @@
                 showFeedback('🎉');
                 
                 if (memoryScore === 4) {
-                    showResult('ยอดเยี่ยม! คุณจับคู่ครบทั้งหมด! 🏆');
-                    celebrate();
+                    setTimeout(() => {
+                        let efficiency = memoryClicks <= 12 ? 'Perfect! ' : 
+                                       memoryClicks <= 16 ? 'ดีมาก! ' : 
+                                       memoryClicks <= 20 ? 'ดี! ' : '';
+                        showResult(`🏆 ${efficiency}จับคู่ครบแล้ว! ใช้ ${memoryClicks} คลิก`);
+                        celebrate();
+                    }, 500);
                 }
             } else {
+                // จับคู่ผิด
                 setTimeout(() => {
                     card1.classList.remove('flipped');
                     card2.classList.remove('flipped');
                     memoryFlipped = [];
-                }, 1000);
+                }, 400);
             }
         }
 
@@ -924,16 +1146,28 @@
             setupMemoryGame();
         }
 
+        // =================
         // ฟังก์ชันแสดงผล
+        // =================
         function showResult(message) {
+            const existingResult = document.querySelector('.result');
+            if (existingResult) {
+                existingResult.remove();
+            }
+            
             const result = document.createElement('div');
             result.className = 'result';
             result.textContent = message;
-            document.querySelector('.game-area.active').appendChild(result);
             
-            setTimeout(() => {
-                result.remove();
-            }, 3000);
+            const activeGame = document.querySelector('.game-area.active');
+            if (activeGame) {
+                activeGame.appendChild(result);
+                
+                setTimeout(() => {
+                    result.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => result.remove(), 500);
+                }, 3000);
+            }
         }
 
         function showFeedback(emoji) {
@@ -952,20 +1186,30 @@
             document.body.appendChild(feedback);
             
             setTimeout(() => {
-                feedback.remove();
+                feedback.style.animation = 'fadeOut 0.3s forwards';
+                setTimeout(() => feedback.remove(), 300);
             }, 500);
         }
 
         function celebrate() {
-            const celebration = document.createElement('div');
-            celebration.className = 'celebration';
-            celebration.textContent = '🎊';
-            document.body.appendChild(celebration);
-            
-            setTimeout(() => {
-                celebration.remove();
-            }, 1000);
+            // สร้างหลายๆ อีโมจิ
+            const emojis = ['🎊', '🎉', '🌟', '✨', '🎈'];
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.className = 'celebration';
+                    celebration.textContent = emojis[i % emojis.length];
+                    celebration.style.left = (30 + Math.random() * 40) + '%';
+                    celebration.style.animationDelay = (i * 0.1) + 's';
+                    document.body.appendChild(celebration);
+                    
+                    setTimeout(() => celebration.remove(), 1000);
+                }, i * 100);
+            }
         }
+
+        // เริ่มต้นด้วยการแสดงเมนู
+        console.log('🎮 เกมฝึกทักษะการใช้เมาส์พร้อมแล้ว!');
     </script>
 </body>
 </html>
