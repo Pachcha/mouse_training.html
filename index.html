@@ -203,68 +203,92 @@
             100% { transform: scale(1); }
         }
 
-        /* เกมเขาวงกต */
+        /* เกมเขาวงกต - ปรับปรุงใหม่ */
         .maze-container {
             position: relative;
-            width: 600px;
-            height: 400px;
+            width: 800px;
+            height: 500px;
             margin: 0 auto;
-            background: white;
+            background: #e8f5e9;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+            border: 3px solid #4CAF50;
         }
 
         .maze-path {
-            position: absolute;
-            background: #90EE90;
-            transition: background 0.3s;
+            fill: #81c784;
+            stroke: none;
         }
 
         .maze-wall {
-            position: absolute;
-            background: #764ba2;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            fill: #5e35b1;
+            stroke: #4527a0;
+            stroke-width: 2;
         }
 
         .maze-start, .maze-end {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
-            z-index: 10;
+            z-index: 5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .maze-start {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
             top: 20px;
             left: 20px;
         }
 
         .maze-end {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
             bottom: 20px;
             right: 20px;
         }
 
-        .maze-player {
+        .maze-ball {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            background: #FFD700;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA000);
             border-radius: 50%;
-            top: 30px;
-            left: 30px;
-            z-index: 15;
-            transition: all 0.2s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            cursor: none;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: none;
+            pointer-events: none;
+        }
+
+        .maze-trail {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fadeOut 1s forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(0.5); }
+        }
+
+        .maze-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            z-index: 20;
         }
 
         /* ผลลัพธ์ */
@@ -391,6 +415,12 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
     </style>
 </head>
 <body>
@@ -438,31 +468,34 @@
             <button class="reset-btn" onclick="resetDragGame()">เริ่มใหม่</button>
         </div>
 
-        <!-- เกมเขาวงกต -->
+        <!-- เกมเขาวงกต - ปรับปรุงใหม่ -->
         <div id="mazeGame" class="game-area">
-            <div class="instructions">🗺️ เลื่อนเมาส์จากจุดเริ่มต้นไปยังเป้าหมาย อย่าชนกำแพง!</div>
-            <div class="score-board">เวลา: <span id="mazeTime">0</span> วินาที</div>
+            <div class="instructions">🗺️ เลื่อนเมาส์พาลูกบอลจากจุดเริ่มต้นไปยังเป้าหมาย อย่าให้ชนกำแพงสีม่วง!</div>
+            <div class="score-board">
+                เวลา: <span id="mazeTime">0</span> วินาที | 
+                ชนกำแพง: <span id="mazeHits">0</span> ครั้ง
+            </div>
             
             <div class="maze-container" id="mazeContainer">
+                <svg width="800" height="500" style="position: absolute; top: 0; left: 0;">
+                    <!-- เส้นทางสีเขียว -->
+                    <rect class="maze-path" x="20" y="20" width="760" height="100"/>
+                    <rect class="maze-path" x="680" y="120" width="100" height="260"/>
+                    <rect class="maze-path" x="20" y="380" width="760" height="100"/>
+                    <rect class="maze-path" x="20" y="120" width="100" height="260"/>
+                    <rect class="maze-path" x="120" y="200" width="560" height="100"/>
+                    
+                    <!-- กำแพงสีม่วง -->
+                    <rect class="maze-wall" x="200" y="120" width="400" height="80"/>
+                    <rect class="maze-wall" x="200" y="300" width="400" height="80"/>
+                    <rect class="maze-wall" x="350" y="0" width="100" height="120"/>
+                    <rect class="maze-wall" x="350" y="380" width="100" height="120"/>
+                </svg>
+                
                 <div class="maze-start">START</div>
                 <div class="maze-end">GOAL</div>
-                <div class="maze-player" id="mazePlayer"></div>
-                
-                <!-- เส้นทางเขาวงกต -->
-                <div class="maze-path" style="top: 20px; left: 20px; width: 560px; height: 60px;"></div>
-                <div class="maze-path" style="top: 80px; left: 520px; width: 60px; height: 240px;"></div>
-                <div class="maze-path" style="top: 320px; left: 100px; width: 480px; height: 60px;"></div>
-                <div class="maze-path" style="top: 160px; left: 100px; width: 60px; height: 160px;"></div>
-                <div class="maze-path" style="top: 160px; left: 100px; width: 300px; height: 60px;"></div>
-                
-                <!-- กำแพง -->
-                <div class="maze-wall" style="top: 0; left: 0; width: 600px; height: 20px;"></div>
-                <div class="maze-wall" style="top: 0; left: 0; width: 20px; height: 400px;"></div>
-                <div class="maze-wall" style="bottom: 0; left: 0; width: 520px; height: 20px;"></div>
-                <div class="maze-wall" style="top: 0; right: 0; width: 20px; height: 320px;"></div>
-                <div class="maze-wall" style="top: 80px; left: 80px; width: 440px; height: 80px;"></div>
-                <div class="maze-wall" style="top: 220px; left: 160px; width: 240px; height: 100px;"></div>
-                <div class="maze-wall" style="top: 220px; left: 400px; width: 120px; height: 100px;"></div>
+                <div class="maze-ball" id="mazeBall"></div>
+                <div class="maze-status" id="mazeStatus">พร้อมเริ่ม!</div>
             </div>
             
             <button class="reset-btn" onclick="resetMazeGame()">เริ่มใหม่</button>
@@ -487,6 +520,7 @@
         let dragScore = 0;
         let mazeTime = 0;
         let mazeTimer = null;
+        let mazeHits = 0;
         let memoryScore = 0;
         let memoryFlipped = [];
         let memoryMatched = [];
@@ -662,20 +696,28 @@
             setupDragGame();
         }
 
-        // เกมเขาวงกต
+        // เกมเขาวงกต - ปรับปรุงใหม่
         function setupMazeGame() {
             mazeTime = 0;
+            mazeHits = 0;
+            document.getElementById('mazeTime').textContent = '0';
+            document.getElementById('mazeHits').textContent = '0';
+            document.getElementById('mazeStatus').textContent = 'พร้อมเริ่ม!';
+            
             if (mazeTimer) clearInterval(mazeTimer);
             
-            const player = document.getElementById('mazePlayer');
+            const ball = document.getElementById('mazeBall');
             const container = document.getElementById('mazeContainer');
             let isPlaying = false;
             let hasWon = false;
+            let ballX = 45;
+            let ballY = 45;
             
-            // Reset position
-            player.style.left = '30px';
-            player.style.top = '30px';
+            // ตั้งตำแหน่งเริ่มต้น
+            ball.style.left = ballX + 'px';
+            ball.style.top = ballY + 'px';
             
+            // เริ่มจับเวลา
             mazeTimer = setInterval(() => {
                 if (isPlaying && !hasWon) {
                     mazeTime++;
@@ -683,56 +725,119 @@
                 }
             }, 1000);
             
-            container.onmouseenter = function() {
-                isPlaying = true;
+            // ฟังก์ชันตรวจสอบการชนกำแพง
+            function checkWallCollision(x, y) {
+                // กำแพง 1: x=200-600, y=120-200
+                if (x > 175 && x < 625 && y > 95 && y < 225) return true;
+                // กำแพง 2: x=200-600, y=300-380
+                if (x > 175 && x < 625 && y > 275 && y < 405) return true;
+                // กำแพง 3: x=350-450, y=0-120
+                if (x > 325 && x < 475 && y < 145) return true;
+                // กำแพง 4: x=350-450, y=380-500
+                if (x > 325 && x < 475 && y > 355) return true;
+                
+                // ขอบนอก
+                if (x < 0 || x > 750 || y < 0 || y > 450) return true;
+                
+                return false;
+            }
+            
+            // ฟังก์ชันตรวจสอบถึงเป้าหมาย
+            function checkGoal(x, y) {
+                // เป้าหมายอยู่ที่ประมาณ x=700, y=420
+                if (x > 650 && y > 370) return true;
+                return false;
+            }
+            
+            // เมื่อเมาส์เข้ามาในพื้นที่เกม
+            container.onmouseenter = function(e) {
+                if (!hasWon) {
+                    isPlaying = true;
+                    document.getElementById('mazeStatus').textContent = 'กำลังเล่น...';
+                }
             };
             
+            // เมื่อเมาส์ออกจากพื้นที่เกม
+            container.onmouseleave = function(e) {
+                if (!hasWon) {
+                    isPlaying = false;
+                    document.getElementById('mazeStatus').textContent = 'หยุดชั่วคราว';
+                }
+            };
+            
+            // ติดตามการเคลื่อนที่ของเมาส์
             container.onmousemove = function(e) {
                 if (!isPlaying || hasWon) return;
                 
                 const rect = container.getBoundingClientRect();
-                const x = e.clientX - rect.left - 20;
-                const y = e.clientY - rect.top - 20;
+                const targetX = e.clientX - rect.left - 25;
+                const targetY = e.clientY - rect.top - 25;
                 
-                player.style.left = x + 'px';
-                player.style.top = y + 'px';
+                // ทำให้ลูกบอลตามเมาส์แบบนุ่มนวล
+                const dx = targetX - ballX;
+                const dy = targetY - ballY;
+                const speed = 0.15; // ความเร็วในการตาม (0-1)
+                
+                const newX = ballX + dx * speed;
+                const newY = ballY + dy * speed;
                 
                 // ตรวจสอบการชนกำแพง
-                const walls = document.querySelectorAll('.maze-wall');
-                const playerRect = player.getBoundingClientRect();
-                
-                for (let wall of walls) {
-                    const wallRect = wall.getBoundingClientRect();
-                    if (isColliding(playerRect, wallRect)) {
-                        showFeedback('💥');
-                        player.style.left = '30px';
-                        player.style.top = '30px';
-                        isPlaying = false;
-                        setTimeout(() => {
+                if (checkWallCollision(newX, newY)) {
+                    mazeHits++;
+                    document.getElementById('mazeHits').textContent = mazeHits;
+                    showFeedback('💥');
+                    
+                    // รีเซ็ตตำแหน่ง
+                    ballX = 45;
+                    ballY = 45;
+                    ball.style.left = ballX + 'px';
+                    ball.style.top = ballY + 'px';
+                    
+                    document.getElementById('mazeStatus').textContent = 'ชนกำแพง! เริ่มใหม่';
+                    isPlaying = false;
+                    
+                    setTimeout(() => {
+                        if (!hasWon) {
                             isPlaying = true;
-                        }, 1000);
-                        return;
+                            document.getElementById('mazeStatus').textContent = 'กำลังเล่น...';
+                        }
+                    }, 1000);
+                } else {
+                    // อัปเดตตำแหน่งลูกบอล
+                    ballX = newX;
+                    ballY = newY;
+                    ball.style.left = ballX + 'px';
+                    ball.style.top = ballY + 'px';
+                    
+                    // สร้างรอยทาง
+                    if (Math.random() < 0.3) {
+                        const trail = document.createElement('div');
+                        trail.className = 'maze-trail';
+                        trail.style.left = (ballX + 10) + 'px';
+                        trail.style.top = (ballY + 10) + 'px';
+                        container.appendChild(trail);
+                        setTimeout(() => trail.remove(), 1000);
+                    }
+                    
+                    // ตรวจสอบถึงเป้าหมาย
+                    if (checkGoal(ballX, ballY)) {
+                        hasWon = true;
+                        isPlaying = false;
+                        clearInterval(mazeTimer);
+                        document.getElementById('mazeStatus').textContent = 'สำเร็จ! 🎉';
+                        
+                        let message = `ยอดเยี่ยม! คุณผ่านเขาวงกตใน ${mazeTime} วินาที`;
+                        if (mazeHits === 0) {
+                            message += ' โดยไม่ชนกำแพงเลย! สุดยอด! 🏆';
+                        } else {
+                            message += ` และชนกำแพง ${mazeHits} ครั้ง`;
+                        }
+                        
+                        showResult(message);
+                        celebrate();
                     }
                 }
-                
-                // ตรวจสอบถึงเป้าหมาย
-                const goal = document.querySelector('.maze-end');
-                const goalRect = goal.getBoundingClientRect();
-                
-                if (isColliding(playerRect, goalRect)) {
-                    hasWon = true;
-                    clearInterval(mazeTimer);
-                    showResult(`ยอดเยี่ยม! คุณผ่านเขาวงกตใน ${mazeTime} วินาที! 🏆`);
-                    celebrate();
-                }
             };
-        }
-
-        function isColliding(rect1, rect2) {
-            return !(rect1.right < rect2.left || 
-                    rect1.left > rect2.right || 
-                    rect1.bottom < rect2.top || 
-                    rect1.top > rect2.bottom);
         }
 
         function resetMazeGame() {
@@ -841,6 +946,7 @@
                 font-size: 80px;
                 z-index: 1000;
                 animation: fadeIn 0.5s;
+                pointer-events: none;
             `;
             feedback.textContent = emoji;
             document.body.appendChild(feedback);
@@ -860,17 +966,6 @@
                 celebration.remove();
             }, 1000);
         }
-
-        // CSS animation for shake
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                75% { transform: translateX(10px); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
